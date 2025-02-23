@@ -76,6 +76,7 @@ class BotController < ApplicationController
       .find { |app| app["name"] == BotController.bot_name }
     json_info = {
       name: json_all_info["name"],
+      pid: json_all_info["pid"],
       status: json_all_info["pm2_env"]["status"],
       revision: json_all_info["pm2_env"]["versioning"]["revision"][0..7],
       uptime: pretty_interval(ActiveSupport::Duration.build(Time.current - Time.at(0, json_all_info["pm2_env"]["pm_uptime"], :millisecond))),
