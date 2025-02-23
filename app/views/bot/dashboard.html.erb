@@ -27,49 +27,53 @@
 <h1>Logs</h1>
 
 <details open>
-<summary>Bot logs</summary>
-<pre id="logs">Loading...</pre>
+  <summary>Bot logs</summary>
+  <div class="scrollable-box">
+    <pre id="logs">Loading...</pre>
+  </div>
 </details>
 
 <details>
-<summary>Dashboard logs</summary>
-<pre id="dashboard_logs">Loading...</pre>
+  <summary>Dashboard logs</summary>
+  <div class="scrollable-box">
+    <pre id="dashboard_logs">Loading...</pre>
+  </div>
 </details>
 
 <script>
-    function fillStatus(status) {
-        const table = document.getElementById("status");
-        table.innerHTML = "";
-        const header = table.createTHead();
-        const headerRow = header.insertRow();
-        const body = table.createTBody();
-        const row = body.insertRow();
-        for (const [key, value] of Object.entries(status)) {
-            headerRow.insertCell().textContent = key;
-            row.insertCell().textContent = value;
-        }
+  function fillStatus(status) {
+    const table = document.getElementById("status");
+    table.innerHTML = "";
+    const header = table.createTHead();
+    const headerRow = header.insertRow();
+    const body = table.createTBody();
+    const row = body.insertRow();
+    for (const [key, value] of Object.entries(status)) {
+      headerRow.insertCell().textContent = key;
+      row.insertCell().textContent = value;
     }
-    function fetchStatus() {
-        fetch('/status?token=<%=params[:token]%>')
-            .then(response => response.json())
-            .then(fillStatus);
-    }
+  }
+  function fetchStatus() {
+    fetch('/status?token=<%=params[:token]%>')
+      .then(response => response.json())
+      .then(fillStatus);
+  }
+  fetchStatus();
+  setInterval(fetchStatus, 5000);
+
+  function fetchLogs() {
+    fetch('/logs?token=<%=params[:token]%>')
+      .then(response => response.json())
+      .then(logs => {
+        document.getElementById("logs").innerText = logs.logs;
+        document.getElementById("dashboard_logs").innerText = logs.dashboard_logs;
+      });
+  }
+  fetchLogs();
+  setInterval(fetchLogs, 5000);
+
+  function refresh() {
     fetchStatus();
-    setInterval(fetchStatus, 5000);
-
-    function fetchLogs() {
-        fetch('/logs?token=<%=params[:token]%>')
-            .then(response => response.json())
-            .then(logs => {
-                document.getElementById("logs").innerText = logs.logs;
-                document.getElementById("dashboard_logs").innerText = logs.dashboard_logs;
-            });
-    }
     fetchLogs();
-    setInterval(fetchLogs, 5000);
-
-    function refresh() {
-        fetchStatus();
-        fetchLogs();
-    }
+  }
 </script>
