@@ -1,0 +1,79 @@
+body {
+  font-family: "Noto Sans Mono", monospace;
+}
+
+.btn-base {
+  font-family: "Noto Sans Mono", monospace;
+  border: 1px solid black;
+  border-radius: 6px;
+  color: #000;
+  padding: 6px 12px;
+  font-weight: 600;
+  margin: 6px;
+}
+
+.btn-green {
+  background-color: hsl(120, 50%, 50%);
+}
+
+.btn-green:hover {
+  background-color: hsl(120, 50%, 40%);
+}
+
+.btn-green:active {
+  background-color: hsl(120, 50%, 30%);
+}
+
+.btn-red {
+  background-color: hsl(0, 50%, 50%);
+}
+
+.btn-red:hover {
+  background-color: hsl(0, 50%, 40%);
+}
+
+.btn-red:active {
+  background-color: hsl(0, 50%, 30%);
+}
+
+.btn-yellow {
+  background-color: hsl(60, 50%, 50%);
+}
+
+.btn-yellow:hover {
+  background-color: hsl(60, 50%, 40%);
+}
+
+.btn-yellow:active {
+  background-color: hsl(60, 50%, 30%);
+}
+
+#btn-container {
+  display: flex;
+  flex-direction: row;
+}
+
+#status {
+  border-collapse: collapse;
+}
+
+#status thead td {
+  padding: 10px;
+  text-align: center;
+  border: 1px solid #ddd;
+  font-weight: bold;
+}
+
+#status tbody td {
+  padding: 10px;
+  text-align: left;
+  border: 1px solid #ddd;
+}
+
+#status tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+#status tr:hover {
+  background-color: #ddd;
+}
