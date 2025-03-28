@@ -32,6 +32,11 @@ class BotController < ApplicationController
     "npm --prefix \"#{bot_dir}\" install && npm --prefix \"#{bot_dir}\" run build && npm --prefix \"#{bot_dir}\" run data"
   end
 
+  def exec_bg(shell_cmd)
+    pid = Process.fork { BotController.execute_and_log(shell_cmd) }
+    Process.detach(pid)
+  end
+
   def control
     command = params[:command]
 
@@ -44,7 +49,8 @@ class BotController < ApplicationController
       "#{BotController.bot_ecosystem_command('stop')} && git -C \"#{BotController.bot_dir}\" pull --recurse-submodules && #{BotController.bot_rebuild_command} && #{BotController.bot_ecosystem_command('start')}"
     end
 
-    Process.fork { BotController.execute_and_log(shell_cmd) }
+    exec_bg(shell_cmd)
+
     respond_to do |format|
       format.js
       format.html { redirect_to dashboard_path(token: params[:token]) }
@@ -53,8 +59,7 @@ class BotController < ApplicationController
 
   def start
     shell_cmd = "#{BotController.bot_rebuild_command} && #{BotController.bot_ecosystem_command('start')}"
-
-    Process.fork { BotController.execute_and_log(shell_cmd) }
+    exec_bg(shell_cmd)
   end
 
   STATUS2EMOJI = {
