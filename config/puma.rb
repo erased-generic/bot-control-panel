@@ -31,14 +31,8 @@ end
 # terminating a worker in development environments.
 worker_timeout 3600 if ENV.fetch("RAILS_ENV", "development") == "development"
 
-# Specifies the `port` that Puma will listen on to receive requests; default is 23768.
-ssl_bind(
-  '0.0.0.0',
-  ENV.fetch('PORT') { 3000 },
-  cert: ENV.fetch('SSL_CERT') { 'config/ssl/localhost.crt' },
-  key: ENV.fetch('SSL_KEY') { 'config/ssl/localhost.key' },
-  verify_mode: 'none'
-)
+# Specifies the `port` that Puma will listen on to receive requests; default is 3000.
+port ENV.fetch('PORT') { 3000 }
 
 # Specifies the `environment` that Puma will run in.
 environment rails_env
