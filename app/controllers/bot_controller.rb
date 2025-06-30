@@ -79,11 +79,15 @@ class BotController < ApplicationController
   def status
     json_all_info = JSON.parse(`#{BotController.bot_ecosystem_command('jlist')}`)
       .find { |app| app["name"] == BotController.bot_name }
+    if json_all_info.nil?
+      render json: {}
+      return
+    end
     json_info = {
       name: json_all_info["name"],
       pid: json_all_info["pid"],
       status: json_all_info["pm2_env"]["status"],
-      revision: json_all_info["pm2_env"]["versioning"]["revision"][0..7],
+      revision: json_all_info["pm2_env"]["env"]["GIT_COMMIT"],
       uptime: pretty_interval(ActiveSupport::Duration.build(Time.current - Time.at(0, json_all_info["pm2_env"]["pm_uptime"], :millisecond))),
       restart_time: json_all_info["pm2_env"]["restart_time"],
     }
@@ -99,7 +103,7 @@ class BotController < ApplicationController
   DASHBOARD_LOGS_LINES = 50
 
   def logs
-    logs = `pm2 logs #{BotController.bot_name} --lines #{BOT_LOGS_LINES} --nostream`
+    logs = `pm2 logs #{BotController.bot_name} --nostream --lines #{BOT_LOGS_LINES}`
     dashboard_logs = `tail -n #{DASHBOARD_LOGS_LINES} #{LOG_FILE}`
     render json: { logs: logs, dashboard_logs: dashboard_logs }
   end
