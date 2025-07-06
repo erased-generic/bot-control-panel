@@ -9,6 +9,8 @@ if bot_name.nil? || bot_name.empty? || bot_name.match?(/[^a-zA-Z0-9_\-]/)
   abort("Invalid or missing BOT_NAME: #{bot_name.inspect}")
 end
 APP_CONFIG['bot_name'] = bot_name
+APP_CONFIG['pm2_iface'] = Rails.root.join('lib/pm2_iface/pm2_iface.js')
+APP_CONFIG['pm2_iface_sock'] = "/tmp/pm2_iface.sock"
 
 # Initialize the Rails application.
 Rails.application.initialize!
