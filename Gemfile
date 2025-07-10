@@ -26,3 +26,5 @@ end
 
 gem 'rails-ujs'
 gem 'rack-attack'
+
+gem "inline_svg", "~> 1.10"

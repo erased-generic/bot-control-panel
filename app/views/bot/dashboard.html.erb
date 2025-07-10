@@ -1,40 +1,69 @@
-<h1>Bot Status</h1>
-
-<div class="scrollable-box">
-  <table id="status"></table>
-</div>
-
-<button class="btn-base btn-green" onClick=refresh()>Refresh</button>
-
 <h1>Bot Control Panel</h1>
 
-<div id="btn-container">
+<div class="scrollable-box">
+  <table id="status">
+    <thead>
+      <tr id="status-header">
+        <td>start</td>
+        <td>stop</td>
+        <td>update</td>
+        <td>name</td>
+      </tr>
+    </thead>
+    <tbody id="status-body">
+      <% @bots.each do |bot_name| %>
+        <tr data-bot="<%= bot_name %>">
+          <td class="centered-cell">
+            <%= form_with url: control_path(token: params[:token]), method: :post, local: false do |f| %>
+              <%= f.hidden_field :bot_name, value: bot_name %>
+              <%= f.hidden_field :command, value: 'start' %>
+              <button type="submit" class="btn-base btn-green">
+                <%= inline_svg("icons/start.svg", class: "w-6 h-6") %>
+              </button>
+            <% end %>
+          </td>
 
-<%= form_with url: control_path(token: params[:token]), method: :post, local: false do |f| %>
-  <%= f.hidden_field :command, value: 'start' %>
-  <%= f.submit 'Start Bot', class: 'button btn-base btn-green' %>
-<% end %>
+          <td class="centered-cell">
+            <%= form_with url: control_path(token: params[:token]), method: :post, local: false do |f| %>
+              <%= f.hidden_field :bot_name, value: bot_name %>
+              <%= f.hidden_field :command, value: 'stop' %>
+              <button type="submit" class="btn-base btn-red">
+                <%= inline_svg("icons/stop.svg", class: "w-6 h-6") %>
+              </button>
+            <% end %>
+          </td>
 
-<%= form_with url: control_path(token: params[:token]), method: :post, local: false do |f| %>
-  <%= f.hidden_field :command, value: 'stop' %>
-  <%= f.submit 'Stop Bot', class: 'button btn-base btn-red' %>
-<% end %>
+          <td class="centered-cell">
+            <%= form_with url: control_path(token: params[:token]), method: :post, local: false do |f| %>
+              <%= f.hidden_field :bot_name, value: bot_name %>
+              <%= f.hidden_field :command, value: 'update' %>
+              <button type="submit" class="btn-base btn-yellow">
+                <%= inline_svg("icons/update.svg", class: "w-6 h-6") %>
+              </button>
+            <% end %>
+          </td>
 
-<%= form_with url: control_path(token: params[:token]), method: :post, local: false do |f| %>
-  <%= f.hidden_field :command, value: 'update' %>
-  <%= f.submit 'Update Bot', class: 'button btn-base btn-yellow' %>
-<% end %>
-
+          <td><%= bot_name %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
 </div>
+
+<button class="btn-base btn-green" onClick=refresh()>
+  <%= inline_svg("icons/refresh.svg", class: "w-6 h-6") %>
+</button>
 
 <h1>Logs</h1>
 
-<details open>
-  <summary>Bot logs</summary>
-  <div class="scrollable-box">
-    <pre id="logs">Loading...</pre>
-  </div>
-</details>
+<% @bots.each do |bot_name| %>
+  <details>
+    <summary><%= bot_name %> logs</summary>
+    <div class="scrollable-box">
+      <pre id="logs" data-bot="<%= bot_name %>">Loading...</pre>
+    </div>
+  </details>
+<% end %>
 
 <details>
   <summary>Dashboard logs</summary>
@@ -44,23 +73,48 @@
 </details>
 
 <script>
-  function fillStatus(status) {
-    const table = document.getElementById("status");
-    table.innerHTML = "";
-    const header = table.createTHead();
-    const headerRow = header.insertRow();
-    const body = table.createTBody();
-    const row = body.insertRow();
-    for (const [key, value] of Object.entries(status)) {
-      headerRow.insertCell().textContent = key;
-      row.insertCell().textContent = value;
+  let statusCols = new Set();
+
+  function createMissingColumn(columnName) {
+    const headerRow = document.getElementById("status-header");
+    headerRow.insertCell().textContent = columnName;
+    for (const row of document.querySelectorAll("#status-body tr")) {
+      const td = row.insertCell();
+      td.classList.add(`col-${columnName}`);
+    }
+    statusCols.add(columnName);
+  }
+
+  function createMissingColumns(status) {
+    for (const [botName, data] of Object.entries(status)) {
+      for (const key of Object.keys(data)) {
+        if (!statusCols.has(key)) {
+          createMissingColumn(key);
+        }
+      }
     }
   }
+
+  function fillStatus(status) {
+    createMissingColumns(status);
+    for (const [botName, data] of Object.entries(status)) {
+      const row = document.querySelector(`tr[data-bot="${botName}"]`);
+      if (!row) {
+        continue;
+      }
+      for (const [key, value] of Object.entries(data)) {
+        const cell = row.querySelector(`.col-${key}`);
+        cell.textContent = value;
+      }
+    }
+  }
+
   function fetchStatus() {
     fetch('/status?token=<%=params[:token]%>')
       .then(response => response.json())
       .then(fillStatus);
   }
+
   fetchStatus();
   setInterval(fetchStatus, 5000);
 
@@ -68,10 +122,16 @@
     fetch('/logs?token=<%=params[:token]%>')
       .then(response => response.json())
       .then(logs => {
-        document.getElementById("logs").innerText = logs.logs;
+        for (const [botName, botLogs] of Object.entries(logs.logs)) {
+          const logBox = document.querySelector(`pre#logs[data-bot="${botName}"]`);
+          if (logBox) {
+            logBox.innerText = botLogs;
+          }
+        }
         document.getElementById("dashboard_logs").innerText = logs.dashboard_logs;
       });
   }
+
   fetchLogs();
   setInterval(fetchLogs, 5000);
 
