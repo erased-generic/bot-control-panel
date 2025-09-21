@@ -70,7 +70,7 @@ class BotController < ApplicationController
                   when 'stop'
                     BotController.bot_ecosystem_command(bot_name, 'stop')
                   when 'update'
-                    "#{BotController.bot_ecosystem_command(bot_name, 'stop')} && git -C \"#{BotController.bot_dir(bot_name)}\" pull --recurse-submodules && #{BotController.bot_rebuild_command(bot_name)} && #{BotController.bot_ecosystem_command(bot_name, 'start')}"
+                    "#{BotController.bot_ecosystem_command(bot_name, 'stop')} && git -C \"#{BotController.bot_dir(bot_name)}\" restore --recurse-submodules . && git -C \"#{BotController.bot_dir(bot_name)}\" pull --recurse-submodules && #{BotController.bot_rebuild_command(bot_name)} && #{BotController.bot_ecosystem_command(bot_name, 'start')}"
                   end
 
       exec_bg(shell_cmd)
