@@ -14,7 +14,7 @@ function createMissingColumns(status) {
   for (const [botName, data] of Object.entries(status)) {
     for (const key of Object.keys(data)) {
       if (!statusCols.has(key)) {
-	createMissingColumn(key);
+        createMissingColumn(key);
       }
     }
   }
@@ -54,10 +54,10 @@ function fetchLogs() {
     .then(response => response.json())
     .then(logs => {
       for (const [botName, botLogs] of Object.entries(logs.logs)) {
-	const logBox = document.querySelector(`pre#logs[data-bot="${botName}"]`);
-	if (logBox) {
-	  logBox.innerText = botLogs;
-	}
+        const logBox = document.querySelector(`pre#logs[data-bot="${botName}"]`);
+        if (logBox) {
+          logBox.innerText = botLogs;
+        }
       }
       document.getElementById('dashboard_logs').innerText = logs.dashboard_logs;
     });
