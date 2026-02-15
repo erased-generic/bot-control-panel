@@ -1,5 +1,13 @@
-body {
+* {
   font-family: "Noto Sans Mono", monospace;
+}
+
+body {
+	background-color: #ddd; /* no stark-white background */
+}
+
+h1 {
+	font-size: 36pt; /* visibility and attention */
 }
 
 button svg {
@@ -13,64 +21,15 @@ button svg {
   text-align: center !important;
 }
 
-.btn-emoji-base {
-  font-family: "Noto Sans Mono", monospace;
-  background: none;
-  border: none;
-  padding: 0;
-  margin: 0;
-  cursor: pointer;
-  outline: none;
-  font-size: 1.5em;
-}
-
-.btn-emoji-green {
-  filter: hue-rotate(-120deg);
-}
-
-.btn-emoji-green:hover {
-  filter: hue-rotate(-120deg) brightness(0.8);
-}
-
-.btn-emoji-green:active {
-  filter: hue-rotate(-120deg) brightness(0.7);
-}
-
-.btn-emoji-red {
-  filter: hue-rotate(-220deg) saturate(1.5);
-}
-
-.btn-emoji-red:hover {
-  filter: hue-rotate(-220deg) saturate(1.5) brightness(0.8);
-}
-
-.btn-emoji-red:active {
-  filter: hue-rotate(-220deg) saturate(1.5) brightness(0.7);
-}
-
-.btn-emoji-yellow {
-  filter: hue-rotate(-180deg) brightness(1.3) saturate(2);
-}
-
-.btn-emoji-yellow:hover {
-  filter: hue-rotate(-180deg) saturate(2) brightness(1);
-}
-
-.btn-emoji-yellow:active {
-  filter: hue-rotate(-180deg) saturate(2) brightness(0.9);
-}
-
 .btn-base {
-  font-family: "Noto Sans Mono", monospace;
   border: none;
   border-radius: 5px;
-  color: #000;
   padding: 1px 1px;
-  font-weight: 600;
   margin: 6px;
   cursor: pointer;
 }
 
+/* clickables color changes */
 .btn-green {
   background-color: hsl(120, 50%, 50%);
 }
@@ -106,6 +65,7 @@ button svg {
 .btn-yellow:active {
   background-color: hsl(60, 50%, 30%);
 }
+/* end clickables color changing */
 
 #btn-container {
   display: flex;
@@ -113,39 +73,41 @@ button svg {
 }
 
 #status {
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+#status td {
+  padding: 10px;  
+  border: 2px solid #ddd;
+  border-radius: 3px;
 }
 
 #status thead td {
-  padding: 10px;
   text-align: center;
-  border: 1px solid #ddd;
   font-weight: bold;
 }
 
 #status tbody td {
-  padding: 10px;
   text-align: left;
-  border: 1px solid #ddd;
 }
 
-#status tr:nth-child(even) {
-  background-color: #f2f2f2;
+#status tr td {
+  background-color: #eee;
 }
 
-#status tr:hover {
-  background-color: #ddd;
+#status tr:hover td {
+  background-color: #f4f4f4;
 }
 
 .scrollable-box {
-  width: 100%;
+  width: 100%; /* fill whole page */
   overflow-x: auto;
 }
 
 pre {
-  font-family: "Noto Sans Mono", monospace;
   white-space: pre;
-  background-color: #f5f5f5;
+  background-color: #eee;
   padding: 10px;
   border-radius: 3px;
   overflow-x: auto;
