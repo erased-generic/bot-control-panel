@@ -1,7 +1,15 @@
 # Load the Rails application.
 require_relative "application"
 
-APP_CONFIG = YAML.load_file(Rails.root.join('config/config.yml')) || {}
+config_file = Rails.root.join('config/config.yml')
+
+if File.exist?(config_file)
+  APP_CONFIG = YAML.load_file(config_file) || {}
+else
+  APP_CONFIG = {}
+  warn "Falling back to empty config/config.yml"
+end
+
 APP_CONFIG['bots'] = {}
 APP_CONFIG['bot_dirs'].each do |bot_dir|
   ecosystem_config = "#{bot_dir}/ecosystem.config.js"
