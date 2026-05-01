@@ -11,7 +11,7 @@ else
 end
 
 APP_CONFIG['bots'] = {}
-APP_CONFIG['bot_dirs'].each do |bot_dir|
+APP_CONFIG['bot_dirs']&.each do |bot_dir|
   ecosystem_config = "#{bot_dir}/ecosystem.config.js"
   bot_name = `node -e "console.log(require(\\\"#{ecosystem_config}\\\").apps[0].name)"`.strip
   if bot_name.nil? || bot_name.empty? || bot_name.match?(/[^a-zA-Z0-9_\-]/)
