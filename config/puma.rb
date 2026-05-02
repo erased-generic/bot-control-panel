@@ -26,13 +26,19 @@ if rails_env == "production"
   else
     preload_app!
   end
+elsif rails_env == "development"
+  # Specifies the `worker_timeout` threshold that Puma will use to wait before
+  # terminating a worker in development environments.
+  worker_timeout 3600
 end
-# Specifies the `worker_timeout` threshold that Puma will use to wait before
-# terminating a worker in development environments.
-worker_timeout 3600 if ENV.fetch("RAILS_ENV", "development") == "development"
 
 # Specifies the `port` that Puma will listen on to receive requests; default is 3000.
-bind "tcp://127.0.0.1:#{ENV.fetch("PORT", 3000)}"
+port = ENV.fetch("PORT") { 3000 }
+if rails_env == "production"
+  bind "tcp://127.0.0.1:#{port}"
+else
+  bind "tcp://0.0.0.0:#{port}"
+end
 
 # Specifies the `environment` that Puma will run in.
 environment rails_env
