@@ -38,7 +38,7 @@ class BotController < ApplicationController
   end
 
   def self.bot_rebuild_command(bot_name)
-    "npm --prefix \"#{bot_dir(bot_name)}\" install && npm --prefix \"#{bot_dir(bot_name)}\" run build && npm --prefix \"#{bot_dir(bot_name)}\" run data"
+    "npm --prefix \"#{bot_dir(bot_name)}\" ci && npm --prefix \"#{bot_dir(bot_name)}\" run build && npm --prefix \"#{bot_dir(bot_name)}\" run data"
   end
 
   def self.pm2_iface_socket
